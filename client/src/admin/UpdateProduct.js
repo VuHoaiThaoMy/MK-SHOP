@@ -34,6 +34,8 @@ const UpdateProduct = ({ match }) => {
     createdProduct,
     redirectToProfile,
     formData,
+    category,
+    shipping
   } = values;
 
   const init = (productId) => {
@@ -153,7 +155,7 @@ const UpdateProduct = ({ match }) => {
         <select onChange={handleChange('category')} className='form-control'>
           {categories &&
             categories.map((c, i) => (
-              <option key={i} value={c._id}>
+              <option key={i} value={c._id} selected={c._id === category}>
                 {c.name}
               </option>
             ))}
@@ -163,8 +165,8 @@ const UpdateProduct = ({ match }) => {
       <div className='form-group'>
         <label style={{ color: 'grey', marginBottom: '8px', fontSize: '17px' }}>Shipping</label>
         <select onChange={handleChange('shipping')} className='form-control'>
-          <option value='1'>YES</option>
-          <option value='0'>NO</option>
+          <option value='1' selected={shipping}>YES</option>
+          <option value='0' selected={!shipping}>NO</option>
         </select>
       </div>
 

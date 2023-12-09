@@ -23,6 +23,7 @@ exports.read = (req, res) => {
 exports.update = (req, res) => {
   // console.log('user update', req.body);
   // req.body.role = 0; // role will always be 0
+  console.log(req.body)
   User.findOneAndUpdate(
     { _id: req.profile._id },
     { $set: req.body },
@@ -33,9 +34,28 @@ exports.update = (req, res) => {
           error: 'You are not authorized to perform this action',
         });
       }
-      user.hashed_password = undefined;
-      user.salt = undefined;
-      res.json(user);
+      // Check if the password is present in req.body
+      if (req.body.password) {
+        // Update the virtual 'password' field
+        user.password = req.body.password;
+        // Save the document to trigger the virtual setter and update hashed_password
+        user.save((err, updatedUser) => {
+          if (err) {
+            return res.status(400).json({
+              error: 'Error updating password',
+            });
+          }
+          // Omit sensitive information from the response
+          updatedUser.hashed_password = undefined;
+          updatedUser.salt = undefined;
+          res.json(updatedUser);
+        });
+      } else {
+        // Omit sensitive information from the response
+        user.hashed_password = undefined;
+        user.salt = undefined;
+        res.json(user);
+      }
     }
   );
 };

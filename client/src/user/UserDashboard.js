@@ -63,6 +63,23 @@ const Dashboard = () => {
     );
   };
 
+  const orderStatus = (status) => {
+    switch (status) {
+      case 'Not processed':
+        return <h6>Status: <span style={{ color: 'lightgrey' }}>Not processed</span></h6>
+      case 'Processing':
+        return <h6>Status: <span style={{ color: 'grey' }}>Processing</span></h6>
+      case 'Shipped':
+        return <h6>Status: <span style={{ color: 'blue' }}>Shipped</span></h6>
+      case 'Delivered':
+        return <h6>Status: <span style={{ color: 'green' }}>Delivered</span></h6>
+      case 'Cancelled':
+        return <h6>Status: <span style={{ color: 'red' }}>Cancelled</span></h6>
+      default:
+        return null
+    }
+  }
+
   const purchaseHistory = (history) => {
     return (
       <div className='card mb-5'>
@@ -71,14 +88,17 @@ const Dashboard = () => {
           <li className='list-group-item'>
             {history.map((h, i) => {
               return (
-                <div>
+                <div key={i}>
                   <hr />
-                  {h.products.map((p, i) => {
+                  <h6>Purchased Date: {moment(h.createdAt).fromNow()}</h6>
+                  <h6>Amount: {h.amount}</h6>
+                  {orderStatus(h.status)}
+                  <h6>Address: {h.address}</h6>
+                  {h.products.map((p, j) => {
                     return (
-                      <div key={i}>
+                      <div key={j}>
                         <h6>Product Name: {p.name}</h6>
                         <h6>Product Price: ${p.price}</h6>
-                        <h6>Purchased Date: {moment(p.createdAt).fromNow()}</h6>
                       </div>
                     );
                   })}
