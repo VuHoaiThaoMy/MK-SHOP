@@ -28,9 +28,6 @@ const UpdateProduct = ({ match }) => {
     name,
     description,
     price,
-    // categories,
-    category,
-    shipping,
     quantity,
     loading,
     error,
@@ -181,11 +178,11 @@ const UpdateProduct = ({ match }) => {
         />
       </div>
       <div style={{ float: 'right', display: 'flex' }}>
-        <li className='' style={{ padding: '4px 1px', marginTop: '5px' }}>
+        <div className='' style={{ padding: '4px 1px', marginTop: '5px' }}>
           <Link className='nav-link-cancel' to='/admin/products'>
             Cancel
           </Link>
-        </li>
+        </div>
         <button className='btn btn-outline-primary btn-products' style={{ marginLeft: '2px' }}><b>UPDATE</b></button>
       </div>
     </form >

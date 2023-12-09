@@ -6,6 +6,12 @@ import { getProducts, deleteProduct } from './apiAdmin';
 import DeleteIcon from '@material-ui/icons/DeleteForever'
 import EditIcon from '@material-ui/icons/EditOutlined';
 import DashboardIcon from '@material-ui/icons/Dashboard';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import '../styles.css'
 
 const ManageProducts = () => {
@@ -13,7 +19,7 @@ const ManageProducts = () => {
 
   const { user, token } = isAuthenticated();
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-  const [deleteProductId, setDeleteProductId] = useState(null);
+  const [deleteProductData, setDeleteProductData] = useState(null);
 
   const loadProducts = () => {
     getProducts().then((data) => {
@@ -42,17 +48,17 @@ const ManageProducts = () => {
       </Link>
     </div>
   );
-  const handleClickDelete = (id) => {
-    setDeleteProductId(id);
+  const handleClickDelete = (p) => {
+    setDeleteProductData(p);
     setShowDeleteConfirmation(true);
   }
   const handleClickConfirm = () => {
-    if (deleteProductId)
-      destroy(deleteProductId);
+    if (deleteProductData)
+      destroy(deleteProductData._id);
     setShowDeleteConfirmation(false);
   }
   const handleClickCancel = () => {
-    setDeleteProductId(null);
+    setDeleteProductData(null);
     setShowDeleteConfirmation(false);
   }
   useEffect(() => {
@@ -80,15 +86,33 @@ const ManageProducts = () => {
                       <EditIcon />
                     </span>
                   </Link>
-                  <button onClick={() => handleClickDelete(p._id)}>Delete</button>
+                  <DeleteIcon onClick={() => handleClickDelete(p)} style={{ cursor: 'pointer' }} />
                 </div>
               </li>
             ))}
           </ul>
-          {showDeleteConfirmation && <div className="confirmation-dialog" style={{ position: 'fixed', top: '50%', left: '50%', width: '250px', height: '250px' }}>
-            <p>Are you sure you want to delete this message?</p>
-            <button onClick={handleClickConfirm}>Yes</button>
-            <button onClick={handleClickCancel}>No</button>
+          {showDeleteConfirmation && <div>
+            <Dialog
+              open={showDeleteConfirmation}
+              onClose={handleClickCancel}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">{"ARE YOU SURE?"}</DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  <strong>{deleteProductData.name}</strong> WILL BE DELETED PERMANENT.
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClickCancel} variant="contained" style={{ backgroundColor: 'lightgrey' }}>
+                  No
+                </Button>
+                <Button onClick={handleClickConfirm} variant="contained" autoFocus style={{ backgroundColor: 'red' }}>
+                  Yes
+                </Button>
+              </DialogActions>
+            </Dialog>
           </div>
           }
         </div>
